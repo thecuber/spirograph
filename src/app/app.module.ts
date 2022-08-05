@@ -1,3 +1,4 @@
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -8,7 +9,8 @@ import { AppComponent } from './app.component';
     AppComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    NgxSliderModule
   ],
   providers: [],
   bootstrap: [AppComponent]
