@@ -25,3 +25,8 @@ export interface Point{
     top: number;
     color: any;
 }
+
+export enum State{
+    RUNNING = "Stop drawing",
+    NOT_RUNNING = "Start drawing"
+}

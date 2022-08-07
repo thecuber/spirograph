@@ -1,17 +1,5 @@
 <div class="wrapper">
-    <!--<div class="canvas" #canvas>
-        <div class="spiro inner" [ngStyle]="{'--color_hue':300, '--color_sat':0 + '%', '--color_light':0 + '%', '--width':'100%',  '--height': '100%' }">
-            <ng-container *ngTemplateOutlet="spiro; context: {index:0, parentWidth: canvas.offsetWidth, parentHeight: canvas == null ? 0 : canvas.offsetHeight}">
-
-            </ng-container>
-            <div *ngFor="let point of points" class="dot" [ngStyle]="{'--color': point.color, '--left': point.left + 'px', '--top': point.top + 'px'}"></div>
-        </div>
-    </div>-->
-    <div class="canvas-outer">
-        <div class="canvas-inner">
-            <canvas #canvas></canvas>
-        </div>
-    </div>
+    <canvas #canvas width="600px" height="600px" class="spiro-canvas"></canvas>
     <div class="settings">
         <ul>
             <li *ngFor="let spiro of spiros; let index = index;" (click)="selectedCircle=index">
@@ -19,8 +7,7 @@
             </li>
         </ul>
         <button (click)="addSpiro()">Add spirograph</button>
-        <button (click)="start()" *ngIf="!isDrawing" [disabled]="spiros.length == 0">Start drawing</button>
-        <button (click)="stop()" *ngIf="isDrawing">Stop !</button>
+        <button (click)="actionClicked()" *ngIf="!isDrawing" [disabled]="spiros.length == 0">{{state}}</button>
         <div *ngIf="selectedCircle >= 0" class="form">
             <div class="form-row">
                 <label for="hue_slider">Hue</label>
@@ -61,17 +48,3 @@
         </div>
     </div>
 </div>
-
-
-<ng-template #spiro let-index="index" let-parentWidth="parentWidth" let-parentHeight="parentHeight">
-    <div *ngIf="index < spiros.length" class="spiro outer" [ngStyle]="{'--rotate': spiros[index].innerRotation + 'deg', '--color_hue':spiros[index].color_hue, '--color_sat':spiros[index].color_sat + '%', '--color_light':spiros[index].color_light + '%', '--size':spiros[index].outerSize + '%', '--left': (parentWidth * (1 - spiros[index].outerSize/100) / 2)*Math.cos(spiros[index].outerRotation*Math.PI/180) + 'px', '--bottom': (parentHeight * (1 - spiros[index].outerSize/100) / 2)*Math.sin(spiros[index].outerRotation*Math.PI/180) + 'px'}">
-        <div *ngIf="index < spiros.length - 1" class="spiro inner" [ngStyle]="{'--color_hue':spiros[index].color_hue, '--color_sat':spiros[index].color_sat + '%', '--color_light':spiros[index].color_light + '%', '--width':spiros[index].innerWidthSize+ '%', '--height':spiros[index].innerHeightSize+ '%', '--left': (parentWidth/2)*Math.cos(spiros[index].innerRotation), '--top': (parentHeight/2)*Math.sin(spiros[index].innerRotation)}">
-
-            <ng-container *ngTemplateOutlet="spiro; context: {index:index+1, parentWidth: parentWidth * spiros[index].innerWidthSize, parentHeight: parentHeight * spiros[index].innerHeightSize}">
-            </ng-container>
-        </div>
-        <div *ngFor="let pen of spiros[index].pens; let i = index;" [id]="'pen' + index + '-' + i" class="dot" [ngStyle]="{'--color': pen.color, '--left': parentWidth/2 * spiros[index].outerSize/100 * (100 + pen.ray * Math.cos((pen.angle)*Math.PI/180))/100 + 'px', '--bottom': parentHeight/2 *spiros[index].outerSize/100 * (100  + pen.ray * Math.sin((pen.angle)*Math.PI/180))/100 + 'px'}">
-
-        </div>
-    </div>
-</ng-template>
