@@ -3,16 +3,26 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
+import { CustomSliderComponent } from './custom-slider/custom-slider.component';
+import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CustomSliderComponent
   ],
   imports: [
     BrowserModule,
-    NgxSliderModule
+    NgxSliderModule,
+    FontAwesomeModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+  constructor(library: FaIconLibrary) {
+    library.addIconPacks(fas);
+  }
+
+}

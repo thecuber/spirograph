@@ -1,50 +1,43 @@
 <div class="wrapper">
-    <canvas #canvas width="600px" height="600px" class="spiro-canvas"></canvas>
+    <canvas #spiroCanvas *ngFor="let spiro of spiros" width="600px" height="600px" class="spiro-canvas"></canvas>
+    <canvas #wrapperCanvas width="600px" height="600px" class="spiro-canvas"></canvas>
+    <canvas #dotCanvas width="600px" height="600px" class="spiro-canvas"></canvas>
     <div class="settings">
-        <ul>
-            <li *ngFor="let spiro of spiros; let index = index;" (click)="selectedCircle=index">
-                <div class="colorico" [ngStyle]="{'--color_hue':spiro.color_hue, '--color_light': spiro.color_light + '%', '--color_sat': spiro.color_sat + '%'}"></div> Circle
-            </li>
-        </ul>
-        <button (click)="addSpiro()">Add spirograph</button>
-        <button (click)="actionClicked()" *ngIf="!isDrawing" [disabled]="spiros.length == 0">{{state}}</button>
-        <div *ngIf="selectedCircle >= 0" class="form">
-            <div class="form-row">
-                <label for="hue_slider">Hue</label>
-                <ngx-slider id="hue_slider" [(value)]="spiros[selectedCircle].color_hue" [options]="sliderOptions(0, 360)"></ngx-slider>
+        <div>
+            <div class="spiro-view" *ngFor="let spiro of spiros; let index = index; let last = last;">
+                <div class="spiro-title">
+                    <fa-icon icon="caret-right" *ngIf="selectedCircle!=index" (click)="selectedCircle=index"></fa-icon>
+                    <fa-icon icon="caret-down" *ngIf="selectedCircle==index" (click)="selectedCircle=-1"></fa-icon>
+                    <fa-icon icon="eye" *ngIf="!spiro.visible" (click)="setVisible(true, spiro)"></fa-icon>
+                    <fa-icon icon="eye-slash" *ngIf="spiro.visible" (click)="setVisible(false, spiro)"></fa-icon>
+                    <div class="colorico" [ngStyle]="{'--color_hue':spiro.color_hue, '--color_light': spiro.color_light + '%', '--color_sat': spiro.color_sat + '%'}"></div> Circle
+                </div>
+                <div class="spiro-settings" *ngIf="selectedCircle==index">
+                    <label for="hue_slider">Hue</label>
+                    <ngx-slider id="hue_slider" [(value)]="spiro.color_hue" [options]="sliderOptions(0, 360)" (userChange)="settingsModified()"></ngx-slider>
+                    <label for="hue_slider">Saturation</label>
+                    <ngx-slider id="hue_slider" [(value)]="spiro.color_sat" [options]="sliderOptions(0, 100)" (userChange)="settingsModified()"></ngx-slider>
+                    <label for="hue_slider">Outer spiro size (%)</label>
+                    <app-custom-slider id="hue_slider" [(value)]="spiro.outerSize" [type]="'ratio'" (change)="settingsModified()"></app-custom-slider>
+                    <label for="hue_slider">Inner width size (%)</label>
+                    <app-custom-slider id="hue_slider" [(value)]="spiro.innerWidth" [type]="'ratio'" (change)="settingsModified()"></app-custom-slider>
+                    <label for="hue_slider">inner height size (%)</label>
+                    <app-custom-slider id="hue_slider" [(value)]="spiro.innerHeight" [type]="'ratio'" (change)="settingsModified()"></app-custom-slider>
+                    <label for="hue_slider">Inner X Delta (%)</label>
+                    <app-custom-slider id="hue_slider" [(value)]="spiro.innerXDelta" [type]="'ratio'" (change)="settingsModified()"></app-custom-slider>
+                    <label for="hue_slider">Inner Angle Delta</label>
+                    <app-custom-slider id="hue_slider" [(value)]="spiro.innerAngleDelta" [type]="'angle'" (change)="settingsModified()"></app-custom-slider>
+                    <label for="hue_slider">Initial inner rotation</label>
+                    <app-custom-slider id="hue_slider" [(value)]="spiro.innerRotation" [type]="'angle'" (change)="settingsModified()"></app-custom-slider>
+                    <label for="hue_slider">Initial outer rotation</label>
+                    <app-custom-slider id="hue_slider" [(value)]="spiro.outerRotation" [type]="'angle'" (change)="settingsModified()"></app-custom-slider>
+                </div>
+                <hr *ngIf="!last">
             </div>
-            <div class="form-row">
-                <label for="hue_slider">Saturation</label>
-                <ngx-slider id="hue_slider" [(value)]="spiros[selectedCircle].color_sat" [options]="sliderOptions(0, 100)"></ngx-slider>
-            </div>
-            <div class="form-row">
-                <label for="hue_slider">Outer spiro size (%)</label>
-                <ngx-slider id="hue_slider" [(value)]="spiros[selectedCircle].outerSize" [options]="sliderOptions(0, 100)"></ngx-slider>
-            </div>
-            <div class="form-row">
-                <label for="hue_slider">Inner width size (%)</label>
-                <ngx-slider id="hue_slider" [(value)]="spiros[selectedCircle].innerWidthSize" [options]="sliderOptions(0, 100)"></ngx-slider>
-            </div>
-            <div class="form-row">
-                <label for="hue_slider">inner height size (%)</label>
-                <ngx-slider id="hue_slider" [(value)]="spiros[selectedCircle].innerHeightSize" [options]="sliderOptions(0, 100)"></ngx-slider>
-            </div>
-            <div class="form-row">
-                <label for="hue_slider">Inner X Delta (%)</label>
-                <ngx-slider id="hue_slider" [(value)]="spiros[selectedCircle].innerXDelta" [options]="sliderOptions(0, 100)"></ngx-slider>
-            </div>
-            <div class="form-row">
-                <label for="hue_slider">Inner Angle Delta (%)</label>
-                <ngx-slider id="hue_slider" [(value)]="spiros[selectedCircle].innerAngleDelta" [options]="sliderOptions(0, 100)"></ngx-slider>
-            </div>
-            <div class="form-row">
-                <label for="hue_slider">Initial inner rotation</label>
-                <ngx-slider id="hue_slider" [(value)]="spiros[selectedCircle].innerRotation" [options]="sliderOptions(0, 360)"></ngx-slider>
-            </div>
-            <div class="form-row">
-                <label for="hue_slider">Initial outer rotation</label>
-                <ngx-slider id="hue_slider" [(value)]="spiros[selectedCircle].outerRotation" [options]="sliderOptions(0, 360)"></ngx-slider>
-            </div>
+        </div>
+        <div class="actions">
+            <button (click)="addSpiro()">Add spirograph</button>
+            <button (click)="actionClicked()" [disabled]="spiros.length == 0">{{state}}</button>
         </div>
     </div>
 </div>

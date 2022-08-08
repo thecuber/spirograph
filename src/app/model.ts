@@ -1,16 +1,27 @@
 export interface Spiro{
     
+    /**Static variable for size, all ratios */
+    outerSize: number;
+    innerWidth: number;
+    innerHeight: number;
+    innerXDelta: number;
+    innerAngleDelta: number;
+    pens: Pen[];
+    /**Drawing stuff */
+    canvasContext ?: CanvasRenderingContext2D;
     color_hue: number;
     color_sat: number;
     color_light: number;
-    outerSize: number;//percentage of big parent size
-    innerWidthSize: number;
-    innerHeightSize: number;
-    innerXDelta: number;
-    innerAngleDelta: number;
-    innerRotation: number;
+    visible: boolean;
+    /**Coordinates which will be updating*/
+    origin ?: [number, number];
+    innerRotation : number;
     outerRotation: number; 
-    pens: Pen[];
+    size ?: number;
+    innerOrigin ?: [number, number];
+    innerWidthSize ?: number;
+    innerHeightSize ?: number;
+    innerOutputRotation ?: number;
 }
 
 export interface Pen{
