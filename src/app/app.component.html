@@ -10,7 +10,7 @@
                     <fa-icon icon="caret-down" *ngIf="selectedCircle==index" (click)="selectedCircle=-1"></fa-icon>
                     <fa-icon icon="eye" *ngIf="!spiro.visible" (click)="setVisible(true, spiro)"></fa-icon>
                     <fa-icon icon="eye-slash" *ngIf="spiro.visible" (click)="setVisible(false, spiro)"></fa-icon>
-                    <div class="colorico" [ngStyle]="{'--color_hue':spiro.color_hue, '--color_light': spiro.color_light + '%', '--color_sat': spiro.color_sat + '%'}"></div> Circle
+                    <div class="colorico" [ngStyle]="{'--color_hue':spiro.color_hue, '--color_light': spiro.color_light + '%', '--color_sat': spiro.color_sat + '%'}"></div> Circlee
                 </div>
                 <div class="spiro-settings" *ngIf="selectedCircle==index">
                     <label for="hue_slider">Hue</label>
