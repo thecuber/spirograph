@@ -1,4 +1,4 @@
-import { Options } from '@angular-slider/ngx-slider';
+import { ChangeContext, Options } from '@angular-slider/ngx-slider';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
 @Component({
@@ -24,12 +24,15 @@ export class CustomSliderComponent implements OnInit, OnChanges {
 
   options!: Options;
 
+  date : number = Date.now();
+
   constructor() { }
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes['type'].firstChange){
+  
+    if(changes['type'] && changes['type'].firstChange){
       this.setOptions(changes['type'].currentValue);
     }
-    if(changes['value']){
+    if(changes['value'] && (changes['value'].firstChange || (Date.now() - this.date) > 100)){
       this.format(changes['value'].currentValue);
     }
   }
@@ -53,14 +56,16 @@ export class CustomSliderComponent implements OnInit, OnChanges {
     }
   }
 
-  unformat($event: number){
+  unformat($event: ChangeContext){
+    var v = $event.value;
     if(this.type == Type.ANGLE){
-      this.value = $event / 180 * Math.PI;
+      v = v / 180 * Math.PI;
     }else{
-      this.value = $event / 100;
+      v = v / 100;
     }
-    this.valueChange.emit(this.value);
+    this.valueChange.emit(v);
     this.change.emit();
+    this.date = Date.now();
   }
 
 }
