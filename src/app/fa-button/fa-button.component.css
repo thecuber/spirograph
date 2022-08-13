@@ -1,0 +1,27 @@
+button {
+    border-radius: 5px;
+    padding: 10px;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+fa-icon {
+    padding-right: 5px;
+}
+
+.btn-success {
+    background-color: rgb(58, 148, 58);
+}
+
+.btn-warning {
+    background-color: rgb(233, 168, 27);
+}
+
+.btn-error {
+    background-color: rgb(194, 58, 58);
+}
+
+.btn-info {
+    background: rgb(60, 60, 233);
+}

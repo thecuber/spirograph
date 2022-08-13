@@ -6,11 +6,13 @@ import { AppComponent } from './app.component';
 import { CustomSliderComponent } from './custom-slider/custom-slider.component';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
+import { FaButtonComponent } from './fa-button/fa-button.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CustomSliderComponent
+    CustomSliderComponent,
+    FaButtonComponent
   ],
   imports: [
     BrowserModule,

@@ -41,7 +41,7 @@ export class CustomSliderComponent implements OnInit, OnChanges {
     if(type == Type.ANGLE){
       this.options = {floor: 0, ceil: 360};
     }else{
-      this.options = {floor: 0, ceil: 100};
+      this.options = {floor: 0, ceil: 100, maxLimit: 95};
     }
   }
 

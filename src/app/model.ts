@@ -11,7 +11,6 @@ export interface Spiro{
     canvasContext ?: CanvasRenderingContext2D;
     color_hue: number;
     color_sat: number;
-    color_light: number;
     visible: boolean;
     /**Coordinates which will be updating*/
     origin ?: [number, number];
@@ -38,6 +37,7 @@ export interface Point{
 }
 
 export enum State{
-    RUNNING = "Stop drawing",
+    RUNNING = "Pause drawing",
+    PAUSED = "Unpause drawing",
     NOT_RUNNING = "Start drawing"
 }

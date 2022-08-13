@@ -3,58 +3,56 @@
     <canvas #wrapperCanvas width="600px" height="600px" class="spiro-canvas"></canvas>
     <canvas #dotCanvas width="600px" height="600px" class="spiro-canvas"></canvas>
     <div class="settings">
-        <div>
-            <div class="spiro-view" *ngFor="let spiro of spiros; let index = index; let last = last;">
-                <div class="spiro-title">
-                    <fa-icon icon="caret-right" *ngIf="selectedCircle!=index" (click)="selectedCircle=index"></fa-icon>
-                    <fa-icon icon="caret-down" *ngIf="selectedCircle==index" (click)="selectedCircle=-1"></fa-icon>
-                    <fa-icon icon="eye" *ngIf="!spiro.visible" (click)="setVisible(true, spiro)"></fa-icon>
-                    <fa-icon icon="eye-slash" *ngIf="spiro.visible" (click)="setVisible(false, spiro)"></fa-icon>
-                    <div class="colorico" [ngStyle]="{'--color_hue':spiro.color_hue, '--color_light': spiro.color_light + '%', '--color_sat': spiro.color_sat + '%'}"></div> Circle
-                </div>
-                <div class="spiro-settings" *ngIf="selectedCircle==index">
-                    <label for="hue_slider">Hue</label>
-                    <ngx-slider id="hue_slider" [(value)]="spiro.color_hue" [options]="sliderOptions(0, 360)" (userChange)="settingsModified()"></ngx-slider>
-                    <label for="hue_slider">Saturation</label>
-                    <ngx-slider id="hue_slider" [(value)]="spiro.color_sat" [options]="sliderOptions(0, 100)" (userChange)="settingsModified()"></ngx-slider>
-                    <label for="hue_slider">Outer spiro size (%)</label>
-                    <app-custom-slider id="hue_slider" [(value)]="spiro.outerSize" [type]="'ratio'" (change)="settingsModified()"></app-custom-slider>
-                    <label for="hue_slider">Inner width size (%)</label>
-                    <app-custom-slider id="hue_slider" [(value)]="spiro.innerWidth" [type]="'ratio'" (change)="settingsModified()"></app-custom-slider>
-                    <label for="hue_slider">inner height size (%)</label>
-                    <app-custom-slider id="hue_slider" [(value)]="spiro.innerHeight" [type]="'ratio'" (change)="settingsModified()"></app-custom-slider>
-                    <label for="hue_slider">Inner X Delta (%)</label>
-                    <app-custom-slider id="hue_slider" [(value)]="spiro.innerXDelta" [type]="'ratio'" (change)="settingsModified()"></app-custom-slider>
-                    <label for="hue_slider">Inner Angle Delta</label>
-                    <app-custom-slider id="hue_slider" [(value)]="spiro.innerAngleDelta" [type]="'angle'" (change)="settingsModified()"></app-custom-slider>
-                    <label for="hue_slider">Initial inner rotation</label>
-                    <app-custom-slider id="hue_slider" [(value)]="spiro.innerRotation" [type]="'angle'" (change)="settingsModified()"></app-custom-slider>
-                    <label for="hue_slider">Initial outer rotation</label>
-                    <app-custom-slider id="hue_slider" [(value)]="spiro.outerRotation" [type]="'angle'" (change)="settingsModified()"></app-custom-slider>
-                    <ng-container *ngFor="let pen of spiro.pens">
-                        <div style="display: flex;">
-                            <div [ngStyle]="{'background': pen.color}" style="width: 50px; height: 50px; margin-right: 10px;">
-                            </div>
-                            Pen
-                        </div>
-                        <div>
-
-                        </div>
-                        <label for="pen_angle_slider">Pen angle</label>
-                        <app-custom-slider id="pen_angle_slider" [(value)]="pen.angle" [type]="'angle'" (change)="settingsModified()"></app-custom-slider>
-                        <label for="pen_ray_slider">Pen ray</label>
-                        <app-custom-slider id="pen_ray_slider" [(value)]="pen.ray" [type]="'ratio'" (change)="settingsModified()"></app-custom-slider>
-
-                    </ng-container>
-
-                </div>
-                <hr *ngIf="!last">
+        <div class="spiro-actions">
+            <h3>Spirograph list</h3>
+            <div style="display: flex;">
+                <button class="btn btn-success" style="margin-right:10px;" (click)="addSpiro()"><fa-icon icon="plus"></fa-icon>Add spirograph </button>
+                <button class="btn btn-error" (click)="removeSpiro()" [disabled]="spiros.length == 0"><fa-icon icon="trash"></fa-icon>Remove the last spirograph </button>
             </div>
         </div>
-        <div class="actions">
-            <button (click)="addSpiro()">Add spirograph</button>
-            <button (click)="actionClicked()" [disabled]="spiros.length == 0">{{state}}</button>
-            <button (click)="reset()">Reset</button>
+        <div class="spiro-view" *ngFor="let spiro of spiros; let index = index; let last = last;">
+            <div class="spiro-title">
+                <fa-icon [icon]="selectedCircle==index ? 'caret-down' : 'caret-right'" (click)="caretClicked(index)"></fa-icon>
+                <fa-icon [icon]="spiro.visible ? 'eye-slash' : 'eye'" (click)="setVisible(spiro)" style="padding-left: 10px;"></fa-icon>
+                <div class="colorico" [ngStyle]="{'--color_hue':spiro.color_hue, '--color_light': 60 + '%', '--color_sat': spiro.color_sat + '%'}"></div> Spirograph
+            </div>
+            <div class="spiro-settings" *ngIf="selectedCircle==index">
+                <label for="hue_slider">Hue</label>
+                <ngx-slider id="hue_slider" [(value)]="spiro.color_hue" [options]="{'floor':0, 'ceil': 360}" (userChange)="settingsModified()"></ngx-slider>
+                <label for="hue_slider">Saturation</label>
+                <ngx-slider id="hue_slider" [(value)]="spiro.color_sat" [options]="{'floor':0, 'ceil': 100}" (userChange)="settingsModified()"></ngx-slider>
+                <label for="hue_slider">Outer spiro size (%)</label>
+                <app-custom-slider id="hue_slider" [(value)]="spiro.outerSize" [type]="'ratio'" (change)="settingsModified()"></app-custom-slider>
+                <label for="hue_slider">Inner width size (%)</label>
+                <app-custom-slider id="hue_slider" [(value)]="spiro.innerWidth" [type]="'ratio'" (change)="settingsModified()"></app-custom-slider>
+                <label for="hue_slider">inner height size (%)</label>
+                <app-custom-slider id="hue_slider" [(value)]="spiro.innerHeight" [type]="'ratio'" (change)="settingsModified()"></app-custom-slider>
+                <label for="hue_slider">Inner X Delta (%)</label>
+                <app-custom-slider id="hue_slider" [(value)]="spiro.innerXDelta" [type]="'ratio'" (change)="settingsModified()"></app-custom-slider>
+                <label for="hue_slider">Inner Angle Delta</label>
+                <app-custom-slider id="hue_slider" [(value)]="spiro.innerAngleDelta" [type]="'angle'" (change)="settingsModified()"></app-custom-slider>
+                <label for="hue_slider">Initial inner rotation</label>
+                <app-custom-slider id="hue_slider" [(value)]="spiro.innerRotation" [type]="'angle'" (change)="settingsModified()"></app-custom-slider>
+                <label for="hue_slider">Initial outer rotation</label>
+                <app-custom-slider id="hue_slider" [(value)]="spiro.outerRotation" [type]="'angle'" (change)="settingsModified()"></app-custom-slider>
+            </div>
+            <hr>
+        </div>
+        <div class="footer">
+            <div class="speed">
+                <label for="">Animation speed</label>
+                <ngx-slider id="speed_slider" [(value)]="animSpeed" [options]="{'floor':1, 'ceil':25}"></ngx-slider>
+            </div>
+            <div class="actions">
+                <fa-button [icon]="isRunning() ? 'pause': 'play'" type="btn-success" (clicked)="actionClicked()" [name]="state"></fa-button>
+                <fa-button icon="stop" (clicked)="reset()" name="Reset" type="btn-warning"></fa-button>
+                <fa-button type="btn-info" (clicked)="showAllClicked()" [icon]="showAll ? 'eye' : 'eye-slash'" [name]="showAll ? 'Show all' : 'Hide all'"></fa-button>
+                <fa-button type="btn-info" (clicked)="gearChange()" icon="gear" [name]="showGear ? 'Show gear' : 'Hide gear'"></fa-button>
+            </div>
         </div>
     </div>
 </div>
+
+<ng-template>
+
+</ng-template>
