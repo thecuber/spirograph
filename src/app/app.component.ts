@@ -30,6 +30,7 @@ export class AppComponent implements OnInit {
   drawingSubscription !: Subscription;
 
   points: [number, number, string][] = [];
+  freshPoints: [number, number, string][] = [];
 
   state: State = State.NOT_RUNNING;
 
@@ -40,13 +41,14 @@ export class AppComponent implements OnInit {
   GLOBAL_DENT = 100;
   GEAR_PERCENTAGE = 0.05;
 
+  color: any;
+
   constructor() { }
 
   ngOnInit() {
     this.addSpiro();
     this.width = this.wrapperCanvas.nativeElement.width;
     this.height = this.wrapperCanvas.nativeElement.height;
-   
     this.dotContext = this.dotCanvas.nativeElement.getContext('2d')!;
   }
 
@@ -55,11 +57,6 @@ export class AppComponent implements OnInit {
   }
 
   addSpiro() {
-    var pens: Pen[] = [];
-    if (this.spiros.length > 0) {
-      var pen = { color: 'black', angle: 0, ray: 0.6 };
-      pens.push(pen);
-    }
     this.spiros.push({
       color_hue: Math.floor(Math.random() * 361),
       color_sat: Math.floor(Math.random() * 100),
@@ -70,7 +67,7 @@ export class AppComponent implements OnInit {
       innerAngleDelta: 0,
       innerRotation: 0,
       outerRotation: 0,
-      pens: pens,
+      pens: [],
       visible: true
     });
     setTimeout(() => this.settingsModified(), 20);
@@ -101,11 +98,14 @@ export class AppComponent implements OnInit {
   }
 
   settingsModified() {
-    this.points = [];
+    if(this.state == State.NOT_RUNNING){
+      this.freshPoints = [];
+      this.points = [];
+    }
     this.update();
     var ctx = this.wrapperCanvas.nativeElement.getContext('2d')!;
     ctx.clearRect(0, 0, this.width, this.height);
-    this.dotContext.beginPath();
+    ctx.beginPath();
     if(this.showGear){
       this.drawEllipseGear(this.width / 2, this.height / 2, this.width / 2, this.height / 2, ctx, 0, 0);
     }else{
@@ -124,10 +124,14 @@ export class AppComponent implements OnInit {
       context.lineWidth = 2;
       spiro.canvasContext = context;
     });
+    this.points = [];
+    this.freshPoints = [];
+    this.dotContext.clearRect(0, 0, this.width, this.height);
   }
 
   run() {
-    for (var i = 0; i < 5; i++) {
+    this.freshPoints = [];
+    for (var i = 0; i < this.animSpeed * 5; i++) {
       this.move();
       this.update();
     }
@@ -135,10 +139,10 @@ export class AppComponent implements OnInit {
   }
 
   move() {
-    const OMEGA = 0.1 * this.animSpeed;
+    const OMEGA = 0.1;
     for (var i = this.spiros.length - 1; i >= 0; i--) {
       var spiro = this.spiros[i];
-      spiro.innerRotation += OMEGA * this.TPS / 1000;
+      spiro.innerRotation += (OMEGA / spiro.outerSize) * this.TPS / 1000;
       spiro.outerRotation -= OMEGA * this.TPS / 1000;
     }
   }
@@ -159,7 +163,7 @@ export class AppComponent implements OnInit {
       parentRotation += spiro.innerRotation;
       spiro.pens.forEach((pen) => {
         var [penx, peny] = this.getPoint(originx, originy, rayWidth * pen.ray, pen.angle + parentRotation);
-        this.points.push([penx, peny, pen.color]);
+        this.freshPoints.push([penx, peny, pen.color]);
       });
       spiro.innerWidthSize = spiro.size * spiro.innerWidth;
       spiro.innerHeightSize = spiro.size * spiro.innerHeight;
@@ -209,7 +213,6 @@ export class AppComponent implements OnInit {
       var [xr, yr] = this.getEllipsePoint(x, y, width - croppedLength, height - croppedLength, (i + 1 / 2) * theta_esp + angle, parent);
       context.lineTo(xm, ym);
       context.lineTo(xr, yr);
-      console.log(xm + " / " + ym + " / " + (i * theta_esp + angle));
     }
     context.closePath();
     context.stroke();
@@ -258,10 +261,11 @@ export class AppComponent implements OnInit {
       });
       this.dotContext.clearRect(0, 0, this.width, this.height);
     }
-    this.points.forEach(([x, y, color]) => {
+    this.freshPoints.forEach(([x, y, color]) => {
       this.dotContext.fillStyle = color;
-      var size = this.state == State.NOT_RUNNING ? 2 : 1;
+      var size = this.state == State.NOT_RUNNING ? 5 : 1;
       this.dotContext.fillRect(x, y, size, size);
+      this.points.push([x, y, color]);
     });
   }
 
@@ -289,18 +293,37 @@ export class AppComponent implements OnInit {
   showAllClicked() {
     this.spiros.forEach((s) => s.visible = this.showAll);
     this.showAll = !this.showAll;
+    this.settingsModified();
   }
 
   gearChange() {
     this.showGear = !this.showGear;
     this.settingsModified();
-    //We need to redraw with or without the gear
   }
 
   caretClicked(index: number){
     if(this.state != State.RUNNING){
       this.selectedCircle = (this.selectedCircle == index) ? -1 : index;
     }
+  }
+
+  addPen(spiro: Spiro){
+   var color = '#';
+   const list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
+    for(var _ = 0; _ < 6; _++){
+      color += list[Math.floor(Math.random() * list.length)];
+    }
+    spiro.pens.push({
+      color: color,
+      ray: 0.5,
+      angle: 0
+    });
+    this.settingsModified();
+  }
+
+  removePen(spiro: Spiro, pen: Pen){
+    spiro.pens = spiro.pens.filter((p) => p != pen);
+    this.settingsModified();
   }
 
 }

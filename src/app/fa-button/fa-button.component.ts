@@ -20,6 +20,9 @@ export class FaButtonComponent implements OnInit {
   @Input()
   name !: string;
 
+  @Input()
+  disable : boolean = false;
+
   constructor() { }
 
   ngOnInit(): void {

@@ -7,6 +7,7 @@ import { CustomSliderComponent } from './custom-slider/custom-slider.component';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FaButtonComponent } from './fa-button/fa-button.component';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { FaButtonComponent } from './fa-button/fa-button.component';
     BrowserModule,
     NgxSliderModule,
     FontAwesomeModule,
+    ColorPickerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,6 +1,7 @@
 .wrapper {
     margin: 0px;
     height: 100%;
+    overflow: hidden;
 }
 
 .spiro-canvas {
@@ -16,6 +17,7 @@
     align-items: center;
     height: 95%;
     margin-left: 600px;
+    justify-content: space-between;
 }
 
 .spiro-actions {
@@ -25,7 +27,31 @@
     width: 100%;
 }
 
+.body {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+}
+
+.spiro-view-wrapper {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
 .spiro-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.spiro-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -41,8 +67,9 @@
 
 .spiro-settings {
     display: grid;
-    grid-template-columns: 20% 80%;
-    width: 40vw;
+    grid-template-columns: 20% 75%;
+    margin-left: 5%;
+    width: 100%;
 }
 
 .colorico {
@@ -51,18 +78,32 @@
     aspect-ratio: 1;
     margin-right: 5px;
     margin-left: 10px;
+    border-radius: 50%;
 }
 
 ngx-slider {
     width: 100%;
 }
 
+.pen-settings {
+    display: grid;
+    grid-template-columns: 20% 75%;
+    row-gap: 10px;
+    margin-left: 5%;
+    width: 100%;
+}
+
+.pen-actions {
+    display: flex;
+    align-items: center;
+    width: 50%;
+    justify-content: space-around;
+}
+
 .footer {
     display: flex;
     flex-direction: column;
-    position: absolute;
     align-items: center;
-    bottom: 20px;
     width: 50%;
 }
 
@@ -77,4 +118,8 @@ ngx-slider {
     width: 100%;
     display: flex;
     padding-bottom: 10px;
+}
+
+:host ::ng-deep color-picker {
+    display: contents;
 }

@@ -1,4 +1,4 @@
-<button [ngClass]="type" (click)="clicked.emit()">
+<button [ngClass]="type" (click)="clicked.emit()" [disabled]="disable">
     <fa-icon [icon]="['fas', icon]"></fa-icon>
     {{name}}
 </button>
