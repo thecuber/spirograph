@@ -8,6 +8,8 @@ import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontaweso
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FaButtonComponent } from './fa-button/fa-button.component';
 import { ColorPickerModule } from 'ngx-color-picker';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { ColorPickerModule } from 'ngx-color-picker';
     BrowserModule,
     NgxSliderModule,
     FontAwesomeModule,
-    ColorPickerModule
+    ColorPickerModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

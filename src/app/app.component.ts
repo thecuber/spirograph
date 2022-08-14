@@ -1,4 +1,5 @@
 import { Component, createPlatform, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { interval, Subscription } from 'rxjs';
 import { Pen, Spiro, State } from './model';
 
@@ -43,7 +44,7 @@ export class AppComponent implements OnInit {
 
   color: any;
 
-  constructor() { }
+  constructor(private toastrService: ToastrService) { }
 
   ngOnInit() {
     this.addSpiro();
@@ -271,10 +272,15 @@ export class AppComponent implements OnInit {
 
   actionClicked() {
     if (this.state == State.NOT_RUNNING) {
-      this.state = State.RUNNING;
-      this.selectedCircle = -1;
-      this.init();
-      this.drawingSubscription = interval(this.TPS).subscribe(_ => this.run());
+      if(this.points.length > 0){
+        this.state = State.RUNNING;
+        this.selectedCircle = -1;
+        this.init();
+        this.drawingSubscription = interval(this.TPS).subscribe(_ => this.run());
+      }else{
+        this.toastrService.warning('No pens are used, please add one by going into a spirograph menu.', 'Pen missing');
+      }
+      
     } else {
       this.drawingSubscription.unsubscribe();
       this.state = State.NOT_RUNNING;
