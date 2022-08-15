@@ -1,6 +1,9 @@
+import { ChangeContext } from '@angular-slider/ngx-slider';
 import { Component, createPlatform, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import * as FileSaver from 'file-saver';
 import { ToastrService } from 'ngx-toastr';
 import { interval, Subscription } from 'rxjs';
+import { FileService } from './file.service';
 import { Pen, Spiro, State } from './model';
 
 @Component({
@@ -44,7 +47,7 @@ export class AppComponent implements OnInit {
 
   color: any;
 
-  constructor(private toastrService: ToastrService) { }
+  constructor(private toastrService: ToastrService, private fileService: FileService) { }
 
   ngOnInit() {
     this.addSpiro();
@@ -154,6 +157,7 @@ export class AppComponent implements OnInit {
     var rayWidth = this.width / 2;
     var rayHeight = this.height / 2;
     this.spiros.forEach((spiro) => {
+      //TODO FIX CETTE MERDE
       var min = Math.min(rayWidth, rayHeight);
       [originx, originy] = this.getEllipsePoint(originx, originy, rayWidth - min * spiro.outerSize, rayHeight - min * spiro.outerSize, spiro.outerRotation, parentRotation);
       spiro.origin = [originx, originy];
@@ -330,6 +334,19 @@ export class AppComponent implements OnInit {
   removePen(spiro: Spiro, pen: Pen){
     spiro.pens = spiro.pens.filter((p) => p != pen);
     this.settingsModified();
+  }
+
+  fileUploaded($event: any){
+    var file:File = $event.target.files[0];
+    this.fileService.fileUploaded(file).subscribe(([spiros, name]) => {
+      this.spiros = spiros;
+      this.toastrService.success('Successfully imported file ' + name, 'File import');
+      setTimeout(() => this.settingsModified(), 50);
+    })
+  }
+
+  exportData(){
+    this.fileService.exportFile(this.spiros);
   }
 
 }

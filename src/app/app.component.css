@@ -22,7 +22,7 @@
 
 .spiro-actions {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
     width: 100%;
 }
@@ -88,9 +88,13 @@ ngx-slider {
 .pen-settings {
     display: grid;
     grid-template-columns: 20% 75%;
+    position: relative;
     row-gap: 10px;
-    margin-left: 5%;
-    width: 100%;
+    margin-left: 10px;
+    width: 95%;
+    padding: 10px 0px 10px 10px;
+    border: solid black 2px;
+    border-radius: 5px;
 }
 
 .pen-actions {
@@ -109,8 +113,8 @@ ngx-slider {
 
 .actions {
     display: flex;
-    align-items: center;
     justify-content: space-evenly;
+    align-items: center;
     width: 100%;
 }
 
@@ -122,4 +126,8 @@ ngx-slider {
 
 :host ::ng-deep color-picker {
     display: contents;
+}
+
+input[type=file] {
+    display: none;
 }

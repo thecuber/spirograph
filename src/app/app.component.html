@@ -5,10 +5,13 @@
     <div class="settings">
         <div class="body">
             <div class="spiro-actions">
-                <h3>Spirographs used</h3>
+                <h3>List & Settings</h3>
                 <div style="display: flex;">
                     <fa-button icon="plus" (clicked)="addSpiro()" type="btn-success" style="margin-right: 10px" name="Add spirograph"></fa-button>
-                    <fa-button icon="trash" (clicked)="removeSpiro()" [disable]="spiros.length == 0" type="btn-warning" style="margin-left: 10px" name="Remove the last spirograph"></fa-button>
+                    <fa-button icon="trash" (clicked)="removeSpiro()" [disable]="spiros.length == 0" type="btn-warning" style="margin-right: 10px" name="Remove the last spirograph"></fa-button>
+                    <fa-button icon="file-upload" type="btn-success" name="Upload file" (clicked)="file.click()" style="margin-right: 10px"></fa-button>
+                    <input #file type="file" accept="file/spiro" (change)="fileUploaded($event)">
+                    <fa-button icon="file-export" type="btn-success" name="Export file" (clicked)="exportData()"></fa-button>
                 </div>
             </div>
             <div class="spiro-view-wrapper">
@@ -46,6 +49,7 @@
                             <fa-button icon="pen" type="btn-info" name="Add pen" (click)="addPen(spiro)"></fa-button>
                         </div>
                         <div class="pen-settings" *ngFor="let pen of spiro.pens">
+                            <fa-icon icon="trash" style="color: red; position: absolute; left: -5px; top: -10px; cursor: pointer;" (click)="removePen(spiro, pen)"></fa-icon>
                             <label for="color_picker_input">Pen color</label>
                             <input id="color_picker_input" [(colorPicker)]="pen.color" [style.background]="pen.color" (cpSliderChange)="settingsModified()" (cpInputChange)="settingsModified()">
                             <label for="pen_dist_slider">Pen distance to center</label>
